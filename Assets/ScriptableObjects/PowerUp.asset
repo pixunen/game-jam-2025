@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62c85819f9f6fab4fa4b3f1429cfceaa, type: 3}
+  m_Name: PowerUp
+  m_EditorClassIdentifier: Assembly-CSharp::PowerUpData
+  minPowerAmount: 2
+  maxPowerAmount: 5
+  despawnTurns: 3
+  powerUpSprite: {fileID: 640334455308034633, guid: be446197c3086b142bc950e874246d94, type: 3}
+  powerUpColor: {r: 1, g: 1, b: 1, a: 1}
