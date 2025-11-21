@@ -20,6 +20,6 @@ public class EnemyData : ScriptableObject
     public int minWaveToSpawn = 1;
 
     [Header("Visual")]
-    public Color enemyColor = new Color(1f, 0.2f, 0.2f, 1f);
+    public Color enemyColor = new(1f, 0.2f, 0.2f, 1f);
     public Sprite enemySprite;
 }

@@ -523,7 +523,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 714062267c2002242be3c84a9671bbf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  maxHealth: 3
+  maxHealth: 10
   currentHealth: 0
 --- !u!58 &137377202
 CircleCollider2D:
@@ -1915,6 +1915,7 @@ MonoBehaviour:
   currentPower: 0
   bonusPower: 0
   maxBonusPower: 5
+  minimumActionCost: 2
 --- !u!114 &1347872356
 MonoBehaviour:
   m_ObjectHideFlags: 0

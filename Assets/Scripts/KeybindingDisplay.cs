@@ -1,5 +1,5 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 public class KeybindingDisplay : MonoBehaviour
 {
@@ -11,7 +11,7 @@ public class KeybindingDisplay : MonoBehaviour
     void CreateKeybindingText()
     {
         // Create a new GameObject for the text
-        GameObject textObj = new GameObject("KeybindingText");
+        GameObject textObj = new("KeybindingText");
         textObj.transform.SetParent(transform, false);
 
         // Add TextMeshPro component

@@ -29,7 +29,7 @@ public class EnemyHealthBar : MonoBehaviour
         canvasRect.localScale = new Vector3(0.008f, 0.008f, 1f);
 
         // Background
-        GameObject background = new GameObject("Background");
+        GameObject background = new("Background");
         background.transform.SetParent(healthBarCanvas.transform, false);
         Image bgImage = background.AddComponent<Image>();
         bgImage.color = new Color(0.2f, 0.2f, 0.2f, 0.8f);
@@ -39,7 +39,7 @@ public class EnemyHealthBar : MonoBehaviour
         bgRect.sizeDelta = Vector2.zero;
 
         // Health bar fill
-        GameObject fill = new GameObject("Fill");
+        GameObject fill = new("Fill");
         fill.transform.SetParent(healthBarCanvas.transform, false);
         healthBarFill = fill.AddComponent<Image>();
         healthBarFill.color = new Color(0.8f, 0.2f, 0.2f, 1f);

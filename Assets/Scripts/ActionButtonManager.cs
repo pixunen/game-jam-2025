@@ -12,8 +12,8 @@ public class ActionButtonManager : MonoBehaviour
     public Button endTurnButton;
 
     [Header("Button Colors")]
-    public Color normalColor = new Color(1f, 1f, 1f, 1f);
-    public Color disabledColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+    public Color normalColor = new(1f, 1f, 1f, 1f);
+    public Color disabledColor = new(0.5f, 0.5f, 0.5f, 0.5f);
 
     private PlayerController playerController;
     private MoveAction moveAction;

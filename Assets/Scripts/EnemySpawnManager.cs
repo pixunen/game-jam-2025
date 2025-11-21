@@ -8,7 +8,7 @@ public class EnemySpawnManager : MonoBehaviour
 
     [Header("Enemy Settings")]
     public GameObject enemyPrefab;
-    public List<EnemyData> availableEnemyTypes = new List<EnemyData>();
+    public List<EnemyData> availableEnemyTypes = new();
 
     [Header("Wave Settings")]
     public int currentWave = 1;
@@ -189,7 +189,7 @@ public class EnemySpawnManager : MonoBehaviour
 
         while (attempts < maxAttempts)
         {
-            Vector2Int randomPos = new Vector2Int(
+            Vector2Int randomPos = new(
                 Random.Range(0, GridManager.Instance.gridWidth),
                 Random.Range(0, GridManager.Instance.gridHeight)
             );

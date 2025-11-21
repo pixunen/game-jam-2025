@@ -4,7 +4,7 @@ using UnityEngine;
 public class PowerUpSpawnManager : MonoBehaviour
 {
     public static PowerUpSpawnManager Instance { get; private set; }
-    
+
     [Header("Configuration")]
     [SerializeField] private PowerUpData powerUpData;
     [SerializeField] private GameObject powerUpPrefab;
@@ -20,14 +20,14 @@ public class PowerUpSpawnManager : MonoBehaviour
 
     [Header("Health Orb Spawn Settings")]
     [Range(0f, 1f)]
-    [SerializeField] private float healthOrbSpawnChance = 0.15f; // 15% chance per turn (rarer)
+    [SerializeField] private float healthOrbSpawnChance = 1f;
     [SerializeField] private int maxHealthOrbsOnMap = 2;
-    
+
     [Header("Runtime Data")]
-    private List<PowerUpController> activePowerUps = new List<PowerUpController>();
-    private List<PowerUpController> activeHealthOrbs = new List<PowerUpController>();
+    private List<PowerUpController> activePowerUps = new();
+    private List<PowerUpController> activeHealthOrbs = new();
     private int currentTurn = 0;
-    
+
     private void Awake()
     {
         // Singleton pattern
@@ -41,7 +41,7 @@ public class PowerUpSpawnManager : MonoBehaviour
             return;
         }
     }
-    
+
     private void Start()
     {
         // Subscribe to turn events
@@ -54,7 +54,7 @@ public class PowerUpSpawnManager : MonoBehaviour
             Debug.LogError("PowerUpSpawnManager: TurnManager not found!");
         }
     }
-    
+
     private void OnDestroy()
     {
         // Unsubscribe from events
@@ -63,7 +63,7 @@ public class PowerUpSpawnManager : MonoBehaviour
             TurnManager.Instance.OnPlayerTurnStart -= OnPlayerTurnStart;
         }
     }
-    
+
     /// <summary>
     /// Called at the start of each player turn
     /// </summary>
@@ -80,7 +80,7 @@ public class PowerUpSpawnManager : MonoBehaviour
         // Try to spawn new health orb (separate chance)
         TrySpawnHealthOrb();
     }
-    
+
     /// <summary>
     /// Attempt to spawn a power-up based on spawn chance
     /// </summary>
@@ -91,14 +91,14 @@ public class PowerUpSpawnManager : MonoBehaviour
         {
             return;
         }
-        
+
         // Roll for spawn chance
         float roll = Random.value;
         if (roll > spawnChance)
         {
             return; // No spawn this turn
         }
-        
+
         // Find a valid spawn position
         Vector2Int spawnPosition = FindRandomSpawnPosition();
         if (spawnPosition == Vector2Int.one * -1)
@@ -106,11 +106,11 @@ public class PowerUpSpawnManager : MonoBehaviour
             Debug.LogWarning("PowerUpSpawnManager: Could not find valid spawn position");
             return;
         }
-        
+
         // Spawn the power-up
         SpawnPowerUp(spawnPosition);
     }
-    
+
     /// <summary>
     /// Spawn a power-up at the specified grid position
     /// </summary>
@@ -121,28 +121,28 @@ public class PowerUpSpawnManager : MonoBehaviour
             Debug.LogError("PowerUpSpawnManager: PowerUp prefab or data not assigned!");
             return;
         }
-        
+
         // Get world position from grid
         Vector3 worldPosition = GridManager.Instance.GetWorldPosition(gridPosition);
-        
+
         // Instantiate power-up
         GameObject powerUpObj = Instantiate(powerUpPrefab, worldPosition, Quaternion.identity);
         powerUpObj.name = $"PowerUp_{gridPosition.x}_{gridPosition.y}";
-        
+
         // Initialize controller
         PowerUpController controller = powerUpObj.GetComponent<PowerUpController>();
         if (controller != null)
         {
             controller.Initialize(powerUpData, gridPosition, currentTurn);
             activePowerUps.Add(controller);
-            
+
             // Register with grid cell
             GridCell cell = GridManager.Instance.GetCell(gridPosition);
             if (cell != null)
             {
                 cell.SetPowerUp(powerUpObj);
             }
-            
+
             Debug.Log($"PowerUp spawned at {gridPosition} with {controller.GetPowerAmount()} power");
         }
         else
@@ -233,18 +233,18 @@ public class PowerUpSpawnManager : MonoBehaviour
             Debug.LogError("PowerUpSpawnManager: GridManager not found!");
             return Vector2Int.one * -1;
         }
-        
+
         int gridWidth = GridManager.Instance.gridWidth;
         int gridHeight = GridManager.Instance.gridHeight;
         int maxAttempts = 100;
-        
+
         for (int i = 0; i < maxAttempts; i++)
         {
             // Random position
             int x = Random.Range(0, gridWidth);
             int y = Random.Range(0, gridHeight);
-            Vector2Int position = new Vector2Int(x, y);
-            
+            Vector2Int position = new(x, y);
+
             // Check if valid
             GridCell cell = GridManager.Instance.GetCell(position);
             if (cell != null && cell.isWalkable && !cell.isOccupied && !cell.HasPowerUp())
@@ -252,35 +252,35 @@ public class PowerUpSpawnManager : MonoBehaviour
                 return position;
             }
         }
-        
+
         // No valid position found
         return Vector2Int.one * -1;
     }
-    
+
     /// <summary>
     /// Remove power-ups that have exceeded their lifespan
     /// </summary>
     private void DespawnOldPowerUps()
     {
-        List<PowerUpController> toRemove = new List<PowerUpController>();
-        
+        List<PowerUpController> toRemove = new();
+
         foreach (PowerUpController powerUp in activePowerUps)
         {
             if (powerUp == null) continue;
-            
+
             if (powerUp.ShouldDespawn(currentTurn))
             {
                 toRemove.Add(powerUp);
             }
         }
-        
+
         // Remove expired power-ups
         foreach (PowerUpController powerUp in toRemove)
         {
             RemovePowerUp(powerUp);
         }
     }
-    
+
     /// <summary>
     /// Remove a power-up from the game
     /// </summary>
@@ -308,7 +308,7 @@ public class PowerUpSpawnManager : MonoBehaviour
         // Destroy GameObject
         Destroy(powerUp.gameObject);
     }
-    
+
     // Public getters for debugging
     public int GetActivePowerUpCount() => activePowerUps.Count;
     public int GetCurrentTurn() => currentTurn;

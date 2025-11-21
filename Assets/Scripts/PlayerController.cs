@@ -1,6 +1,6 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
             int attempts = 0;
             while (spawnCell == null && attempts < 100)
             {
-                Vector2Int randomPos = new Vector2Int(
+                Vector2Int randomPos = new(
                     Random.Range(0, GridManager.Instance.gridWidth),
                     Random.Range(0, GridManager.Instance.gridHeight)
                 );
@@ -316,10 +316,5 @@ public class PlayerController : MonoBehaviour
         TurnManager.Instance.GameOver();
         // Could add game over UI here
         gameObject.SetActive(false);
-    }
-
-    void OnDestroy()
-    {
-        // Cleanup
     }
 }

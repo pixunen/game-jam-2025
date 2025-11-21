@@ -23,7 +23,7 @@ public class GridManager : MonoBehaviour
 
     private GridCell[,] grid;
     private int turnCount = 0;
-    private List<GridCell> highlightedCells = new List<GridCell>();
+    private List<GridCell> highlightedCells = new();
 
     void Awake()
     {
@@ -46,7 +46,7 @@ public class GridManager : MonoBehaviour
         grid = new GridCell[gridWidth, gridHeight];
 
         // Calculate offset to center the grid
-        Vector3 offset = new Vector3(
+        Vector3 offset = new(
             -(gridWidth * cellSize) / 2f + cellSize / 2f,
             -(gridHeight * cellSize) / 2f + cellSize / 2f,
             0
@@ -99,7 +99,7 @@ public class GridManager : MonoBehaviour
         grid = new GridCell[gridWidth, gridHeight];
 
         // Calculate new offset for centering
-        Vector3 offset = new Vector3(
+        Vector3 offset = new(
             -(gridWidth * cellSize) / 2f + cellSize / 2f,
             -(gridHeight * cellSize) / 2f + cellSize / 2f,
             0
@@ -158,7 +158,7 @@ public class GridManager : MonoBehaviour
         // Create a simple quad sprite if no prefab is assigned
         if (cellPrefab == null)
         {
-            GameObject cell = new GameObject("GridCell");
+            GameObject cell = new("GridCell");
             cell.transform.position = position;
             cell.transform.parent = transform;
 
@@ -186,7 +186,7 @@ public class GridManager : MonoBehaviour
     Sprite CreateSquareSprite()
     {
         // Create a simple square texture
-        Texture2D texture = new Texture2D(64, 64);
+        Texture2D texture = new(64, 64);
         Color[] pixels = new Color[64 * 64];
 
         for (int i = 0; i < pixels.Length; i++)
@@ -223,7 +223,7 @@ public class GridManager : MonoBehaviour
     public Vector2Int GetGridPosition(Vector3 worldPos)
     {
         // Calculate offset
-        Vector3 offset = new Vector3(
+        Vector3 offset = new(
             -(gridWidth * cellSize) / 2f + cellSize / 2f,
             -(gridHeight * cellSize) / 2f + cellSize / 2f,
             0
@@ -238,7 +238,7 @@ public class GridManager : MonoBehaviour
 
     public List<GridCell> GetNeighbors(Vector2Int position, int range = 1)
     {
-        List<GridCell> neighbors = new List<GridCell>();
+        List<GridCell> neighbors = new();
 
         for (int x = -range; x <= range; x++)
         {
@@ -262,7 +262,7 @@ public class GridManager : MonoBehaviour
 
     public List<GridCell> GetCellsInRange(Vector2Int position, int range, bool walkableOnly = false)
     {
-        List<GridCell> cellsInRange = new List<GridCell>();
+        List<GridCell> cellsInRange = new();
 
         for (int x = -range; x <= range; x++)
         {
@@ -368,7 +368,7 @@ public class GridManager : MonoBehaviour
 
         // Choose a random border region (top, bottom, left, right)
         int region = Random.Range(0, 4);
-        Vector2Int position = new Vector2Int(-1, -1);
+        Vector2Int position = new(-1, -1);
 
         switch (region)
         {
@@ -460,7 +460,7 @@ public class GridManager : MonoBehaviour
 
         for (int i = 0; i < clusterSize; i++)
         {
-            Vector2Int offset = new Vector2Int(
+            Vector2Int offset = new(
                 Random.Range(-2, 3),
                 Random.Range(-2, 3)
             );

@@ -46,7 +46,7 @@ public class EnemyController : MonoBehaviour
                 spawnCell = null;
                 while (attempts < 100 && spawnCell == null)
                 {
-                    Vector2Int randomPos = new Vector2Int(
+                    Vector2Int randomPos = new(
                         Random.Range(0, GridManager.Instance.gridWidth),
                         Random.Range(0, GridManager.Instance.gridHeight)
                     );

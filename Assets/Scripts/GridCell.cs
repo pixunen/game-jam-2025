@@ -9,10 +9,10 @@ public class GridCell : MonoBehaviour
     public GameObject powerUpObject = null;
 
     private SpriteRenderer spriteRenderer;
-    private Color defaultColor = new Color(0.9f, 0.9f, 0.9f, 1f); // Light gray
-    private Color highlightColor = new Color(0.5f, 1f, 0.5f, 0.7f); // Green highlight
-    private Color attackRangeColor = new Color(1f, 0.5f, 0.5f, 0.7f); // Red for attack range
-    private Color blockedColor = new Color(0.5f, 0.5f, 0.5f, 1f); // Dark gray for blocked
+    private Color defaultColor = new(0.9f, 0.9f, 0.9f, 1f); // Light gray
+    private Color highlightColor = new(0.5f, 1f, 0.5f, 0.7f); // Green highlight
+    private Color attackRangeColor = new(1f, 0.5f, 0.5f, 0.7f); // Red for attack range
+    private Color blockedColor = new(0.5f, 0.5f, 0.5f, 1f); // Dark gray for blocked
 
     void Awake()
     {

@@ -24,7 +24,7 @@ public class TurnManager : MonoBehaviour
     public event Action OnEnemyTurnEnd;
     public event Action<TurnState> OnTurnStateChanged;
 
-    private List<EnemyController> activeEnemies = new List<EnemyController>();
+    private List<EnemyController> activeEnemies = new();
 
     void Awake()
     {

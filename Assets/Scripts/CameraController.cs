@@ -24,7 +24,7 @@ public class CameraController : MonoBehaviour
         if (target == null)
         {
             // Try to find player automatically
-            PlayerController player = FindObjectOfType<PlayerController>();
+            PlayerController player = FindFirstObjectByType<PlayerController>();
             if (player != null)
             {
                 target = player.transform;
