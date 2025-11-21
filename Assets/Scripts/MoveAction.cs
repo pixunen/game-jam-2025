@@ -27,15 +27,15 @@ public class MoveAction : ActionBase
             var enemyController = actor.GetComponent<EnemyController>();
             if (enemyController != null)
             {
-                int distance = Mathf.Abs(enemyController.gridPosition.x - targetPosition.x) +
-                              Mathf.Abs(enemyController.gridPosition.y - targetPosition.y);
+                int distance = Mathf.Abs(enemyController.GridPosition.x - targetPosition.x) +
+                              Mathf.Abs(enemyController.GridPosition.y - targetPosition.y);
                 return distance <= range;
             }
             return false;
         }
 
-        int dist = Mathf.Abs(actorController.gridPosition.x - targetPosition.x) +
-                   Mathf.Abs(actorController.gridPosition.y - targetPosition.y);
+        int dist = Mathf.Abs(actorController.GridPosition.x - targetPosition.x) +
+                   Mathf.Abs(actorController.GridPosition.y - targetPosition.y);
         return dist <= range && dist > 0;
     }
 
@@ -44,7 +44,7 @@ public class MoveAction : ActionBase
         var playerController = actor.GetComponent<PlayerController>();
         var enemyController = actor.GetComponent<EnemyController>();
 
-        Vector2Int currentPos = playerController != null ? playerController.gridPosition : enemyController.gridPosition;
+        Vector2Int currentPos = playerController != null ? playerController.GridPosition : enemyController.GridPosition;
 
         // Clear current cell
         GridCell currentCell = GridManager.Instance.GetCell(currentPos);
@@ -59,15 +59,6 @@ public class MoveAction : ActionBase
         {
             Vector3 worldPos = GridManager.Instance.GetWorldPosition(targetPosition);
             actor.transform.position = worldPos;
-
-            if (playerController != null)
-            {
-                playerController.gridPosition = targetPosition;
-            }
-            else if (enemyController != null)
-            {
-                enemyController.gridPosition = targetPosition;
-            }
 
             targetCell.SetOccupied(actor);
 

@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class EnemyAI
 {
@@ -28,8 +28,8 @@ public class EnemyAI
             return;
         }
 
-        Vector2Int playerPos = player.gridPosition;
-        Vector2Int enemyPos = enemy.gridPosition;
+        Vector2Int playerPos = player.GridPosition;
+        Vector2Int enemyPos = enemy.GridPosition;
 
         // Calculate distance to player
         int distance = Mathf.Abs(playerPos.x - enemyPos.x) + Mathf.Abs(playerPos.y - enemyPos.y);

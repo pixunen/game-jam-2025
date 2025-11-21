@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
     [Header("Player Stats")]
     public int maxHealth = 3;
     public int currentHealth;
-    public Vector2Int gridPosition;
+    public Vector2Int GridPosition => GridManager.Instance.GetGridPosition(transform.position);
 
     [Header("Actions")]
     private MoveAction moveAction;
@@ -42,29 +42,35 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        // Spawn at random grid position
+        // Spawn at a random, unoccupied grid position
         if (GridManager.Instance != null)
         {
-            // Pick random position on grid
-            gridPosition = new Vector2Int(
-                Random.Range(0, GridManager.Instance.gridWidth),
-                Random.Range(0, GridManager.Instance.gridHeight)
-            );
-
-            // Move to that position
-            Vector3 spawnWorldPos = GridManager.Instance.GetWorldPosition(gridPosition);
-            transform.position = spawnWorldPos;
-
-            Debug.Log($"Player spawned at world {transform.position}, grid position: {gridPosition}");
-
-            GridCell cell = GridManager.Instance.GetCell(gridPosition);
-            if (cell != null)
+            GridCell spawnCell = null;
+            int attempts = 0;
+            while (spawnCell == null && attempts < 100)
             {
-                cell.SetOccupied(gameObject);
+                Vector2Int randomPos = new Vector2Int(
+                    Random.Range(0, GridManager.Instance.gridWidth),
+                    Random.Range(0, GridManager.Instance.gridHeight)
+                );
+                GridCell cell = GridManager.Instance.GetCell(randomPos);
+                if (cell != null && cell.isWalkable && !cell.isOccupied)
+                {
+                    spawnCell = cell;
+                }
+                attempts++;
+            }
+
+            if (spawnCell != null)
+            {
+                // Move to that position
+                transform.position = spawnCell.transform.position;
+                spawnCell.SetOccupied(gameObject);
+                Debug.Log($"Player spawned at world {transform.position}, grid position: {GridPosition}");
             }
             else
             {
-                Debug.LogError($"Player grid cell is null at {gridPosition}!");
+                Debug.LogError("Could not find a valid spawn point for the player!");
             }
         }
 
@@ -137,7 +143,7 @@ public class PlayerController : MonoBehaviour
         {
             currentAction = moveAction;
             isSelectingTarget = true;
-            moveAction.ShowRange(gridPosition);
+            moveAction.ShowRange(GridPosition);
             Debug.Log("Move action selected. Click a cell to move.");
         }
         else
@@ -154,7 +160,7 @@ public class PlayerController : MonoBehaviour
         {
             currentAction = attackAction;
             isSelectingTarget = true;
-            attackAction.ShowRange(gridPosition);
+            attackAction.ShowRange(GridPosition);
             Debug.Log("Attack action selected. Click a cell to attack.");
         }
         else
@@ -171,7 +177,7 @@ public class PlayerController : MonoBehaviour
         {
             currentAction = specialAction;
             isSelectingTarget = true;
-            specialAction.ShowRange(gridPosition);
+            specialAction.ShowRange(GridPosition);
             Debug.Log("Special action selected. Click a cell to use special ability.");
         }
         else

@@ -140,6 +140,7 @@ public class TurnManager : MonoBehaviour
         OnEnemyTurnEnd?.Invoke();
 
         turnNumber++;
+        GridManager.Instance.OnTurnEnd();
         StartPlayerTurn();
     }
 

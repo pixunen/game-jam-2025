@@ -18,7 +18,7 @@ public class AttackAction : ActionBase
 
         // Check if within range
         var actorController = actor.GetComponent<PlayerController>();
-        Vector2Int actorPos = actorController != null ? actorController.gridPosition : actor.GetComponent<EnemyController>().gridPosition;
+        Vector2Int actorPos = actorController != null ? actorController.GridPosition : actor.GetComponent<EnemyController>().GridPosition;
 
         int distance = Mathf.Abs(actorPos.x - targetPosition.x) +
                       Mathf.Abs(actorPos.y - targetPosition.y);

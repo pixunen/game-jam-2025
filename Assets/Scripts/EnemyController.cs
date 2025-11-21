@@ -6,7 +6,7 @@ public class EnemyController : MonoBehaviour
     [Header("Enemy Stats")]
     public int maxHealth = 2;
     public int currentHealth;
-    public Vector2Int gridPosition;
+    public Vector2Int GridPosition => GridManager.Instance.GetGridPosition(transform.position);
     public EnemyData enemyData;
 
     [Header("AI")]
@@ -32,42 +32,47 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
-        // If not initialized by spawn manager, try to initialize with default values
-        // This handles legacy hardcoded enemies in the scene
+        // This handles legacy enemies placed in the scene manually.
+        // It finds a valid spot and occupies it.
         if (!isInitialized && GridManager.Instance != null)
         {
-            // Try to find an unoccupied cell
-            int attempts = 0;
-            bool foundSpot = false;
+            GridCell spawnCell = GridManager.Instance.GetCell(GridManager.Instance.GetGridPosition(transform.position));
 
-            while (attempts < 100 && !foundSpot)
+            if (spawnCell == null || !spawnCell.isWalkable || spawnCell.isOccupied)
             {
-                Vector2Int randomPos = new Vector2Int(
-                    Random.Range(0, GridManager.Instance.gridWidth),
-                    Random.Range(0, GridManager.Instance.gridHeight)
-                );
-
-                GridCell cell = GridManager.Instance.GetCell(randomPos);
-                if (cell != null && !cell.isOccupied && cell.isWalkable)
+                // If current position is invalid, find a new one.
+                Debug.LogWarning($"{gameObject.name} is on an invalid cell. Finding a new random spawn point.");
+                int attempts = 0;
+                spawnCell = null;
+                while (attempts < 100 && spawnCell == null)
                 {
-                    gridPosition = randomPos;
-                    foundSpot = true;
+                    Vector2Int randomPos = new Vector2Int(
+                        Random.Range(0, GridManager.Instance.gridWidth),
+                        Random.Range(0, GridManager.Instance.gridHeight)
+                    );
+
+                    GridCell cell = GridManager.Instance.GetCell(randomPos);
+                    if (cell != null && !cell.isOccupied && cell.isWalkable)
+                    {
+                        spawnCell = cell;
+                    }
+                    attempts++;
                 }
-                attempts++;
             }
 
-            // Move to spawn position
-            Vector3 spawnWorldPos = GridManager.Instance.GetWorldPosition(gridPosition);
-            transform.position = spawnWorldPos;
-
-            GridCell spawnCell = GridManager.Instance.GetCell(gridPosition);
             if (spawnCell != null)
             {
+                transform.position = spawnCell.transform.position;
                 spawnCell.SetOccupied(gameObject);
+                isInitialized = true;
+                Debug.Log($"{gameObject.name} (legacy) spawned at grid position: {GridPosition}");
             }
-
-            isInitialized = true;
-            Debug.Log($"{gameObject.name} (legacy) spawned at grid position: {gridPosition}");
+            else
+            {
+                Debug.LogError($"Could not find a valid spawn point for legacy enemy {gameObject.name}. Destroying.");
+                Destroy(gameObject);
+                return;
+            }
         }
 
         // Register with turn manager
@@ -80,13 +85,14 @@ public class EnemyController : MonoBehaviour
     public void Initialize(EnemyData data, Vector2Int spawnPosition)
     {
         enemyData = data;
-        gridPosition = spawnPosition;
+        // The EnemySpawnManager is responsible for setting the world position.
+        // This method just applies the data and occupies the cell at the new position.
 
         // Apply stats from EnemyData
         maxHealth = data.maxHealth;
         currentHealth = maxHealth;
 
-        // Update AI ranges if needed (we'll modify EnemyAI to use data later)
+        // Update AI ranges if needed
         if (enemyAI != null)
         {
             enemyAI.SetRanges(data.moveRange, data.attackRange);
@@ -103,8 +109,8 @@ public class EnemyController : MonoBehaviour
             }
         }
 
-        // Occupy grid cell
-        GridCell cell = GridManager.Instance.GetCell(gridPosition);
+        // Occupy grid cell at the current position
+        GridCell cell = GridManager.Instance.GetCell(GridPosition);
         if (cell != null)
         {
             cell.SetOccupied(gameObject);
@@ -143,7 +149,7 @@ public class EnemyController : MonoBehaviour
         }
 
         // Clear occupied cell
-        GridCell cell = GridManager.Instance.GetCell(gridPosition);
+        GridCell cell = GridManager.Instance.GetCell(GridPosition);
         if (cell != null)
         {
             cell.ClearOccupied();
