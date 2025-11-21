@@ -15,6 +15,7 @@ MonoBehaviour:
   enemyName: Tank Enemy
   maxHealth: 5
   attackDamage: 2
+  score: 50
   moveRange: 2
   attackRange: 2
   spawnWeight: 5

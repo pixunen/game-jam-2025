@@ -15,6 +15,7 @@ MonoBehaviour:
   enemyName: Fast Enemy
   maxHealth: 1
   attackDamage: 1
+  score: 30
   moveRange: 4
   attackRange: 2
   spawnWeight: 8

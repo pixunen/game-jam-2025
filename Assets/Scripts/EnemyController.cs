@@ -136,6 +136,12 @@ public class EnemyController : MonoBehaviour
     {
         Debug.Log($"{gameObject.name} was defeated!");
 
+        // Add score
+        if (GameManager.Instance != null && enemyData != null)
+        {
+            GameManager.Instance.AddScore(enemyData.score);
+        }
+
         // Clear occupied cell
         GridCell cell = GridManager.Instance.GetCell(gridPosition);
         if (cell != null)

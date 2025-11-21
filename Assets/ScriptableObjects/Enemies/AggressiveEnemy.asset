@@ -15,6 +15,7 @@ MonoBehaviour:
   enemyName: Aggressive Enemy
   maxHealth: 3
   attackDamage: 2
+  score: 20
   moveRange: 3
   attackRange: 3
   spawnWeight: 6

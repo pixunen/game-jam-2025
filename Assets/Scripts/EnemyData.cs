@@ -9,6 +9,7 @@ public class EnemyData : ScriptableObject
     [Header("Stats")]
     public int maxHealth = 2;
     public int attackDamage = 1;
+    public int score = 10;
     public int moveRange = 3;
     public int attackRange = 2;
 

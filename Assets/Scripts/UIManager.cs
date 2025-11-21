@@ -10,8 +10,17 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI powerText;
     public TextMeshProUGUI turnText;
     public TextMeshProUGUI healthText;
+    public TextMeshProUGUI scoreText;
     public GameObject gameOverPanel;
     public TextMeshProUGUI gameOverText;
+
+    public void UpdateScore(int score)
+    {
+        if (scoreText != null)
+        {
+            scoreText.text = "Score: " + score;
+        }
+    }
 
     void Awake()
     {

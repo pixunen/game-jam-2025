@@ -14,6 +14,10 @@ public class GameManager : MonoBehaviour
     [Header("Game State")]
     public bool gameStarted = false;
     private GameObject playerInstance;
+    public int score = 0;
+
+    [Header("UI")]
+    public UIManager uiManager;
 
     void Awake()
     {
@@ -31,6 +35,16 @@ public class GameManager : MonoBehaviour
     {
         StartGame();
     }
+
+    public void AddScore(int amount)
+    {
+        score += amount;
+        if (uiManager != null)
+        {
+            uiManager.UpdateScore(score);
+        }
+    }
+
 
     void Update()
     {
