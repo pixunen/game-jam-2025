@@ -39,8 +39,18 @@ public class SpecialAction : ActionBase
                 var enemy = cell.occupyingUnit.GetComponent<EnemyController>();
                 if (enemy != null)
                 {
-                    enemy.TakeDamage(damage);
-                    Debug.Log($"Special hit {enemy.name} for {damage} damage!");
+                    int damageAmount = damage;
+
+                    // Check for stun bonus - stunned enemies take double damage
+                    StatusEffectManager statusManager = enemy.GetStatusEffectManager();
+                    if (statusManager != null && statusManager.IsStunned())
+                    {
+                        damageAmount *= 2;
+                        Debug.Log($"{enemy.name} is STUNNED! Special damage doubled to {damageAmount}!");
+                    }
+
+                    enemy.TakeDamage(damageAmount);
+                    Debug.Log($"Special hit {enemy.name} for {damageAmount} damage!");
                 }
             }
         }

@@ -74,6 +74,12 @@ public class MoveAction : ActionBase
                 }
             }
 
+            // Check for traps (enemies only)
+            if (enemyController != null)
+            {
+                CheckForTraps(targetPosition, actor);
+            }
+
             Debug.Log($"{actor.name} moved to {targetPosition}");
         }
     }
@@ -121,6 +127,20 @@ public class MoveAction : ActionBase
 
         // Clear the cell reference
         cell.ClearPowerUp();
+    }
+
+    private void CheckForTraps(Vector2Int position, GameObject actor)
+    {
+        // Find all traps
+        IceTrap[] traps = GameObject.FindObjectsByType<IceTrap>(FindObjectsSortMode.None);
+        foreach (IceTrap trap in traps)
+        {
+            if (trap.GridPosition == position && !trap.IsTriggered())
+            {
+                trap.TryTrigger(actor);
+                break; // Only trigger one trap per move
+            }
+        }
     }
 
     public override void ShowRange(Vector2Int fromPosition)

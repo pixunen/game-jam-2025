@@ -13,6 +13,9 @@ public class PlayerController : MonoBehaviour
     private MoveAction moveAction;
     private AttackAction attackAction;
     private SpecialAction specialAction;
+    private StunBlastAction stunBlastAction;
+    private IceTrapAction iceTrapAction;
+    private KnockbackWaveAction knockbackWaveAction;
     private ActionBase currentAction;
 
     [Header("Input")]
@@ -31,6 +34,9 @@ public class PlayerController : MonoBehaviour
         moveAction = new MoveAction();
         attackAction = new AttackAction();
         specialAction = new SpecialAction();
+        stunBlastAction = new StunBlastAction();
+        iceTrapAction = new IceTrapAction();
+        knockbackWaveAction = new KnockbackWaveAction();
 
         // Setup input
         playerInput = GetComponent<PlayerInput>();
@@ -183,6 +189,57 @@ public class PlayerController : MonoBehaviour
         else
         {
             Debug.LogWarning("Not enough power for Special action!");
+        }
+    }
+
+    public void SelectStunBlastAction()
+    {
+        if (!TurnManager.Instance.IsPlayerTurn()) return;
+
+        if (PowerManager.Instance.HasEnoughPower(stunBlastAction.powerCost))
+        {
+            currentAction = stunBlastAction;
+            isSelectingTarget = true;
+            stunBlastAction.ShowRange(GridPosition);
+            Debug.Log("Stun Blast action selected. Click an enemy to stun.");
+        }
+        else
+        {
+            Debug.LogWarning("Not enough power for Stun Blast action!");
+        }
+    }
+
+    public void SelectIceTrapAction()
+    {
+        if (!TurnManager.Instance.IsPlayerTurn()) return;
+
+        if (PowerManager.Instance.HasEnoughPower(iceTrapAction.powerCost))
+        {
+            currentAction = iceTrapAction;
+            isSelectingTarget = true;
+            iceTrapAction.ShowRange(GridPosition);
+            Debug.Log("Ice Trap action selected. Click an empty cell to place trap.");
+        }
+        else
+        {
+            Debug.LogWarning("Not enough power for Ice Trap action!");
+        }
+    }
+
+    public void SelectKnockbackWaveAction()
+    {
+        if (!TurnManager.Instance.IsPlayerTurn()) return;
+
+        if (PowerManager.Instance.HasEnoughPower(knockbackWaveAction.powerCost))
+        {
+            currentAction = knockbackWaveAction;
+            isSelectingTarget = true;
+            knockbackWaveAction.ShowRange(GridPosition);
+            Debug.Log("Knockback Wave action selected. Click your position to knockback adjacent enemies.");
+        }
+        else
+        {
+            Debug.LogWarning("Not enough power for Knockback Wave action!");
         }
     }
 

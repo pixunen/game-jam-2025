@@ -16,12 +16,33 @@ public class EnemyController : MonoBehaviour
     private bool isInitialized = false;
     public bool isAttacking = false;
 
+    [Header("Status Effects")]
+    private StatusEffectManager statusEffectManager;
+
+    [Header("Telegraph")]
+    public TelegraphedAction nextAction; // Public so UI can read it
+
     void Awake()
     {
         currentHealth = maxHealth;
         enemyAI = new EnemyAI(this);
         moveAction = new MoveAction();
         attackAction = new AttackAction();
+
+        // Add status effect manager
+        statusEffectManager = gameObject.AddComponent<StatusEffectManager>();
+
+        // Add status effect visual
+        if (GetComponent<StatusEffectVisual>() == null)
+        {
+            gameObject.AddComponent<StatusEffectVisual>();
+        }
+
+        // Add telegraph indicator
+        if (GetComponent<EnemyTelegraphIndicator>() == null)
+        {
+            gameObject.AddComponent<EnemyTelegraphIndicator>();
+        }
 
         // Add health bar component
         if (GetComponent<EnemyHealthBar>() == null)
@@ -80,6 +101,12 @@ public class EnemyController : MonoBehaviour
         {
             TurnManager.Instance.RegisterEnemy(this);
         }
+
+        // Initialize first telegraph for legacy enemies
+        if (enemyAI != null && nextAction == null)
+        {
+            nextAction = enemyAI.DecideNextAction();
+        }
     }
 
     public void Initialize(EnemyData data, Vector2Int spawnPosition)
@@ -117,13 +144,71 @@ public class EnemyController : MonoBehaviour
         }
 
         isInitialized = true;
+
+        // Initialize first telegraphed action
+        if (enemyAI != null)
+        {
+            nextAction = enemyAI.DecideNextAction();
+        }
     }
 
     public void TakeTurn()
     {
+        // Check status effects first
+        if (statusEffectManager != null && statusEffectManager.IsStunned())
+        {
+            Debug.Log($"{gameObject.name} is stunned and cannot act!");
+            // Clear telegraph since we can't act
+            nextAction = null;
+            // Tick status effect at end of turn
+            statusEffectManager.TickStatusEffect();
+            // Telegraph next action for next turn
+            if (enemyAI != null)
+            {
+                nextAction = enemyAI.DecideNextAction();
+            }
+            return;
+        }
+
+        // Execute the previously telegraphed action
+        if (nextAction != null && nextAction.IsValid())
+        {
+            ExecuteTelegraphedAction(nextAction);
+        }
+
+        // Tick status effects at end of turn
+        if (statusEffectManager != null)
+        {
+            statusEffectManager.TickStatusEffect();
+        }
+
+        // Telegraph next action
         if (enemyAI != null)
         {
-            enemyAI.DecideAction();
+            nextAction = enemyAI.DecideNextAction();
+        }
+    }
+
+    private void ExecuteTelegraphedAction(TelegraphedAction action)
+    {
+        switch (action.actionType)
+        {
+            case TelegraphActionType.Attack:
+                Debug.Log($"{gameObject.name}: Executing telegraphed attack at {action.targetPosition}");
+                PerformAttack(action.targetPosition);
+                break;
+            case TelegraphActionType.Move:
+                Debug.Log($"{gameObject.name}: Executing telegraphed move to {action.targetPosition}");
+                ExecuteMove(action.targetPosition);
+                break;
+            case TelegraphActionType.Special:
+                // Future special abilities for enemies
+                Debug.Log($"{gameObject.name}: Executing telegraphed special");
+                break;
+            case TelegraphActionType.None:
+            default:
+                Debug.Log($"{gameObject.name}: No action to execute");
+                break;
         }
     }
 
@@ -166,6 +251,13 @@ public class EnemyController : MonoBehaviour
 
     public void ExecuteMove(Vector2Int targetPosition)
     {
+        // Check if rooted - cannot move
+        if (statusEffectManager != null && statusEffectManager.IsRooted())
+        {
+            Debug.Log($"{gameObject.name} is rooted and cannot move!");
+            return;
+        }
+
         if (moveAction.CanExecute(gameObject, targetPosition))
         {
             moveAction.Execute(gameObject, targetPosition);
@@ -226,5 +318,19 @@ public class EnemyController : MonoBehaviour
         {
             TurnManager.Instance.UnregisterEnemy(this);
         }
+    }
+
+    // Public methods for applying status effects
+    public void ApplyStatusEffect(StatusEffect effect)
+    {
+        if (statusEffectManager != null)
+        {
+            statusEffectManager.ApplyStatusEffect(effect);
+        }
+    }
+
+    public StatusEffectManager GetStatusEffectManager()
+    {
+        return statusEffectManager;
     }
 }

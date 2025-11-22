@@ -7,12 +7,14 @@ public class GridCell : MonoBehaviour
     public bool isOccupied = false;
     public GameObject occupyingUnit = null;
     public GameObject powerUpObject = null;
+    public GameObject trapObject = null;
 
     private SpriteRenderer spriteRenderer;
     private Color defaultColor = new(0.9f, 0.9f, 0.9f, 1f); // Light gray
     private Color highlightColor = new(0.5f, 1f, 0.5f, 0.7f); // Green highlight
     private Color attackRangeColor = new(1f, 0.5f, 0.5f, 0.7f); // Red for attack range
     private Color blockedColor = new(0.5f, 0.5f, 0.5f, 1f); // Dark gray for blocked
+    private Color trapColor = new(0.5f, 0.8f, 1.0f, 0.8f); // Light blue for traps
 
     void Awake()
     {
@@ -59,6 +61,10 @@ public class GridCell : MonoBehaviour
             {
                 spriteRenderer.color = blockedColor;
             }
+            else if (trapObject != null)
+            {
+                spriteRenderer.color = trapColor;
+            }
             else
             {
                 spriteRenderer.color = defaultColor;
@@ -99,5 +105,22 @@ public class GridCell : MonoBehaviour
     public void ClearPowerUp()
     {
         powerUpObject = null;
+    }
+
+    public bool HasTrap()
+    {
+        return trapObject != null;
+    }
+
+    public void SetTrap(GameObject trap)
+    {
+        trapObject = trap;
+        ResetHighlight(); // Update color to show trap
+    }
+
+    public void ClearTrap()
+    {
+        trapObject = null;
+        ResetHighlight(); // Restore default color
     }
 }

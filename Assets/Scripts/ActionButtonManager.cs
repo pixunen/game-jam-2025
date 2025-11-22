@@ -8,6 +8,9 @@ public class ActionButtonManager : MonoBehaviour
     public Button moveButton;
     public Button attackButton;
     public Button specialButton;
+    public Button stunBlastButton;
+    public Button iceTrapButton;
+    public Button knockbackWaveButton;
     public Button cancelButton;
     public Button endTurnButton;
 
@@ -19,6 +22,9 @@ public class ActionButtonManager : MonoBehaviour
     private MoveAction moveAction;
     private AttackAction attackAction;
     private SpecialAction specialAction;
+    private StunBlastAction stunBlastAction;
+    private IceTrapAction iceTrapAction;
+    private KnockbackWaveAction knockbackWaveAction;
 
     void Start()
     {
@@ -34,6 +40,9 @@ public class ActionButtonManager : MonoBehaviour
         moveAction = new MoveAction();
         attackAction = new AttackAction();
         specialAction = new SpecialAction();
+        stunBlastAction = new StunBlastAction();
+        iceTrapAction = new IceTrapAction();
+        knockbackWaveAction = new KnockbackWaveAction();
 
         // Set up button click listeners
         SetupButtonListeners();
@@ -53,6 +62,15 @@ public class ActionButtonManager : MonoBehaviour
         if (specialButton != null)
             specialButton.onClick.AddListener(() => playerController.SelectSpecialAction());
 
+        if (stunBlastButton != null)
+            stunBlastButton.onClick.AddListener(() => playerController.SelectStunBlastAction());
+
+        if (iceTrapButton != null)
+            iceTrapButton.onClick.AddListener(() => playerController.SelectIceTrapAction());
+
+        if (knockbackWaveButton != null)
+            knockbackWaveButton.onClick.AddListener(() => playerController.SelectKnockbackWaveAction());
+
         if (cancelButton != null)
             cancelButton.onClick.AddListener(() => playerController.CancelAction());
 
@@ -65,6 +83,9 @@ public class ActionButtonManager : MonoBehaviour
         SetButtonTextHelper(moveButton, $"(M)ove ({moveAction.powerCost})");
         SetButtonTextHelper(attackButton, $"(A)ttack ({attackAction.powerCost})");
         SetButtonTextHelper(specialButton, $"(S)pecial ({specialAction.powerCost})");
+        SetButtonTextHelper(stunBlastButton, $"Stun ({stunBlastAction.powerCost})");
+        SetButtonTextHelper(iceTrapButton, $"Trap ({iceTrapAction.powerCost})");
+        SetButtonTextHelper(knockbackWaveButton, $"Knockback ({knockbackWaveAction.powerCost})");
         SetButtonTextHelper(cancelButton, "(C)ancel");
         SetButtonTextHelper(endTurnButton, "(E)nd Turn");
     }
@@ -94,6 +115,9 @@ public class ActionButtonManager : MonoBehaviour
         UpdateActionButton(moveButton, moveAction.powerCost, isPlayerTurn && !isGameOver);
         UpdateActionButton(attackButton, attackAction.powerCost, isPlayerTurn && !isGameOver);
         UpdateActionButton(specialButton, specialAction.powerCost, isPlayerTurn && !isGameOver);
+        UpdateActionButton(stunBlastButton, stunBlastAction.powerCost, isPlayerTurn && !isGameOver);
+        UpdateActionButton(iceTrapButton, iceTrapAction.powerCost, isPlayerTurn && !isGameOver);
+        UpdateActionButton(knockbackWaveButton, knockbackWaveAction.powerCost, isPlayerTurn && !isGameOver);
 
         // Cancel and End Turn buttons are always available during player turn
         UpdateUtilityButton(cancelButton, isPlayerTurn && !isGameOver);
@@ -154,6 +178,12 @@ public class ActionButtonManager : MonoBehaviour
             attackButton.onClick.RemoveAllListeners();
         if (specialButton != null)
             specialButton.onClick.RemoveAllListeners();
+        if (stunBlastButton != null)
+            stunBlastButton.onClick.RemoveAllListeners();
+        if (iceTrapButton != null)
+            iceTrapButton.onClick.RemoveAllListeners();
+        if (knockbackWaveButton != null)
+            knockbackWaveButton.onClick.RemoveAllListeners();
         if (cancelButton != null)
             cancelButton.onClick.RemoveAllListeners();
         if (endTurnButton != null)
